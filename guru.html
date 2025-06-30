@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard Guru</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "ISI_API_KEY_KAMU",
+      authDomain: "pengingat-tugas-siswa.firebaseapp.com",
+      projectId: "pengingat-tugas-siswa"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+</head>
+<body>
+  <h2>Panel Guru</h2>
+  <ul id="listTugas"></ul>
+
+  <script>
+    function tampilkanSemuaTugas() {
+      db.collection("tugas").orderBy("waktu", "desc").get().then((querySnapshot) => {
+        const list = document.getElementById("listTugas");
+        list.innerHTML = "";
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const li = document.createElement("li");
+          li.textContent = `📌 ${data.isi} (oleh: ${data.oleh})`;
+          list.appendChild(li);
+        });
+      });
+    }
+    window.onload = tampilkanSemuaTugas;
+  </script>
+</body>
+</html>
