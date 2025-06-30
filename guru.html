@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard Guru</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+  <script>
+    const firebaseConfig = {'apiKey': 'AIzaSyDG0hcPje8e_bgA2BKbPkgEIq9s0s-MFgk', 'authDomain': 'pengingat-tugas-siswa.firebaseapp.com', 'projectId': 'pengingat-tugas-siswa', 'storageBucket': 'pengingat-tugas-siswa.firebasestorage.app', 'messagingSenderId': '223867411205', 'appId': '1:223867411205:web:d77157b1b55d11c292f56c', 'measurementId': 'G-5NC5WHNEB3'};
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+</head>
+<body>
+  <h2>Panel Guru</h2>
+  <ul id="listTugas"></ul>
+
+  <script>
+    function tampilkanSemuaTugas() {
+      db.collection("tugas").orderBy("waktu", "desc").get().then((querySnapshot) => {
+        const list = document.getElementById("listTugas");
+        list.innerHTML = "";
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const li = document.createElement("li");
+          li.textContent = `📌 ${data.isi} (oleh: ${data.oleh})`;
+          list.appendChild(li);
+        });
+      });
+    }
+    window.onload = tampilkanSemuaTugas;
+  </script>
+</body>
+</html>
