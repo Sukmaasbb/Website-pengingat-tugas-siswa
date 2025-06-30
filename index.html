@@ -61,7 +61,7 @@ color: gray;
 </head>
 <body>
 
-<h2>📋 Aplikasi Pengingat Tugas Siswa</h2>
+<h2>📋 Pengingat Tugas Siswa</h2>
 
 <label>Nama Tugas:
 <input type="text" id="tugas" placeholder="Contoh: Buat Laporan Prakarya">
@@ -86,4 +86,68 @@ color: gray;
 <th>Status</th>
 <th>Aksi</th>
 </tr>
-</t
+</thead>
+<tbody id="daftarTugas"></tbody>
+</table>
+
+<script>
+let daftarTugas = JSON.parse(localStorage.getItem('tugas')) || [];
+
+function simpan() {
+localStorage.setItem('tugas', JSON.stringify(daftarTugas));
+}
+
+function tampilkan() {
+const tbody = document.getElementById('daftarTugas');
+tbody.innerHTML = "";
+daftarTugas.forEach((t, i) => {
+const row = document.createElement('tr');
+row.innerHTML = \`
+<td class="\${t.status === 'Selesai' ? 'selesai' : ''}">\${t.nama}</td>
+<td>\${t.mapel}</td>
+<td>\${t.deadline}</td>
+<td>\${t.status}</td>
+<td>
+<button onclick="tandaiSelesai(\${i})">✔️</button>
+<button onclick="hapusTugas(\${i})">🗑️</button>
+</td>
+\`;
+tbody.appendChild(row);
+});
+}
+
+function tambahTugas() {
+const nama = document.getElementById('tugas').value.trim();
+const mapel = document.getElementById('mapel').value.trim();
+const deadline = document.getElementById('deadline').value;
+if (nama && mapel && deadline) {
+daftarTugas.push({ nama, mapel, deadline, status: "Belum" });
+simpan();
+tampilkan();
+document.getElementById('tugas').value = "";
+document.getElementById('mapel').value = "";
+document.getElementById('deadline').value = "";
+} else {
+alert("Mohon lengkapi semua kolom!");
+}
+}
+
+function tandaiSelesai(i) {
+daftarTugas[i].status = "Selesai";
+simpan();
+tampilkan();
+}
+
+function hapusTugas(i) {
+if (confirm("Yakin ingin menghapus tugas ini?")) {
+daftarTugas.splice(i, 1);
+simpan();
+tampilkan();
+}
+}
+
+tampilkan();
+</script>
+
+</body>
+</html>
